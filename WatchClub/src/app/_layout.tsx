@@ -1,16 +1,20 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import React from 'react';
-import { useColorScheme } from 'react-native';
-
+import { SafeAreaView, useColorScheme } from 'react-native';
+import { ThemeProvider } from '@react-navigation/native';
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import AppTabs from '@/components/app-tabs';
+import { useTheme } from '@/hooks/use-theme';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const theme = useTheme();
+
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
+    <ThemeProvider value={{ colors: theme }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
+        <AnimatedSplashOverlay />
+        <AppTabs />
+      </SafeAreaView>
     </ThemeProvider>
   );
 }
