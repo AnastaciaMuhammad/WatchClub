@@ -7,42 +7,63 @@ import '@/global.css';
 
 import { Platform } from 'react-native';
 
+/**
+ * Official WatchClub Color Palette
+ */
+
+/* Color Palette */
 export const Colors = {
   light: {
-    text: '#000000',
-    background: '#ffffff',
-    backgroundElement: '#F0F0F3',
-    backgroundSelected: '#E0E1E6',
-    textSecondary: '#60646C',
+    primary: "#1655E8",         // Buttons, icons, borders
+    secondary: "#CDDCFF",       // Nav backgrounds, containers
+    surface: "#FFFFFF",         // Cards, modals
+    background: "#E8E9EF",      // App background
+        
+    textPrimary: "#1655E8",
+    textInverse: "#FFFFFF",     // Highlighed Card Text
+    
+    border: "#1655E8",          // Card Background
+      
+    disabled: "#A0A0A0",
   },
   dark: {
-    text: '#ffffff',
-    background: '#000000',
-    backgroundElement: '#212225',
-    backgroundSelected: '#2E3135',
-    textSecondary: '#B0B4BA',
+    primary: "#1655E8",
+    secondary: "#2A3A6B",
+      
+    background: "#000000",
+    surface: "#1C1C1E",
+
+    textPrimary: "#FFFFFF",
+    textInverse: "#1655E8",
+      
+    border: "#1655E8",
+
+    muted: "#888888",
   },
 } as const;
 
-export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
 
+/** Type-safe color keys */
+export type ThemeColor =
+  keyof typeof Colors.light &
+  keyof typeof Colors.dark;
+
+/** Fonts (Keep Expo Defaults — Good Practice) */
 export const Fonts = Platform.select({
   ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
     sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
     serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
     rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
     mono: 'ui-monospace',
   },
+
   default: {
     sans: 'normal',
     serif: 'serif',
     rounded: 'normal',
     mono: 'monospace',
   },
+
   web: {
     sans: 'var(--font-display)',
     serif: 'var(--font-serif)',
@@ -51,6 +72,7 @@ export const Fonts = Platform.select({
   },
 });
 
+/** Spacing Scale */
 export const Spacing = {
   half: 2,
   one: 4,
@@ -61,5 +83,12 @@ export const Spacing = {
   six: 64,
 } as const;
 
-export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
+/** Tab Layout Helpers */
+export const BottomTabInset =
+  Platform.select({
+    ios: 50,
+    android: 80,
+  }) ?? 0;
+
+/** Layout Constraint */
 export const MaxContentWidth = 800;
