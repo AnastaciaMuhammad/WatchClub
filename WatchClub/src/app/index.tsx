@@ -8,7 +8,7 @@ export default function SplashScreen() {
   useEffect(() => {
     // Timer to automatically navigate to Welcome after 2 seconds
     const timer = setTimeout(() => {
-      router.replace('welcome');
+      router.replace('home');
     }, 2000);
     
     return () => clearTimeout(timer);
@@ -24,6 +24,8 @@ export default function SplashScreen() {
     </View>
   );
 }
+
+// ─── STYLES ───────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
   container: { 
