@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as Linking from "expo-linking";
 
@@ -21,102 +22,121 @@ export default function MovieScreen() {
   const router = useRouter();
   const theme = useTheme();
 
-  const [movie, setMovie] = useState(null);
+  const movieId = Array.isArray(id) ? id[0] : id;
+
+  const [movie, setMovie] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [trailerKey, setTrailerKey] = useState(null);
+  const [trailerKey, setTrailerKey] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
 
   // 🎬 Fetch movie details
   useEffect(() => {
-    fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}`)
+    if (!movieId) return;
+
+    fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}`)
       .then((res) => res.json())
       .then((data) => {
         setMovie(data);
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [id]);
+  }, [movieId]);
 
   // ▶️ Fetch trailer
   useEffect(() => {
-    fetch(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=${API_KEY}`)
+    if (!movieId) return;
+
+    fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${API_KEY}`)
       .then((res) => res.json())
       .then((data) => {
         const trailer = data.results?.find(
           (vid) => vid.type === "Trailer" && vid.site === "YouTube"
         );
-        if (trailer) setTrailerKey(trailer.key);
-      });
-  }, [id]);
+
+        setTrailerKey(trailer ? trailer.key : null);
+      })
+      .catch(() => setTrailerKey(null));
+  }, [movieId]);
 
   if (loading || !movie) {
-    return <ActivityIndicator style={{ marginTop: 50 }} />;
+    return (
+      <SafeAreaView style={[styles.container, { justifyContent: "center" }]}>
+        <ActivityIndicator />
+      </SafeAreaView>
+    );
   }
 
   return (
-    <ThemedView style={styles.container}>
-      {/* 🔙 Back Button */}
-      <TouchableOpacity
-        onPress={() => router.back()}
-        style={[styles.backBtn, { backgroundColor: theme.surface }]}
-      >
-        <ThemedText>←</ThemedText>
-      </TouchableOpacity>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+      <ThemedView style={styles.container}>
 
-      {/* ❤️ Favorite Button */}
-      <TouchableOpacity
-        onPress={() => setIsFavorite(!isFavorite)}
-        style={[styles.favBtn, { backgroundColor: theme.surface }]}
-      >
-        <ThemedText>{isFavorite ? "❤️" : "🤍"}</ThemedText>
-      </TouchableOpacity>
+        {/* 🔙 Back Button */}
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={[styles.backBtn, { backgroundColor: theme.surface }]}
+        >
+          <ThemedText>←</ThemedText>
+        </TouchableOpacity>
 
-      <ScrollView>
-        {/* 🎬 Poster */}
-        <Image
-          source={{
-            uri: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
-          }}
-          style={styles.image}
-        />
+        {/* ❤️ Favorite Button */}
+        <TouchableOpacity
+          onPress={() => setIsFavorite(!isFavorite)}
+          style={[styles.favBtn, { backgroundColor: theme.surface }]}
+        >
+          <ThemedText>{isFavorite ? "❤️" : "🤍"}</ThemedText>
+        </TouchableOpacity>
 
-        {/* 📄 Content */}
-        <View style={styles.content}>
-          <ThemedText type="title">{movie.title}</ThemedText>
+        <ScrollView>
 
-          <ThemedText type="small" themeColor="disabled">
-            ⭐ {movie.vote_average} / 10
-          </ThemedText>
+          {/* 🎬 Poster */}
+          <Image
+            source={{
+              uri: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+            }}
+            style={styles.image}
+          />
 
-          <ThemedText style={styles.overview}>
-            {movie.overview}
-          </ThemedText>
+          {/* 📄 Content */}
+          <View style={styles.content}>
+            <ThemedText type="title">{movie.title}</ThemedText>
 
-          <ThemedText type="small" style={{ marginTop: 10 }}>
-            Release: {movie.release_date}
-          </ThemedText>
+            <ThemedText type="small" themeColor="disabled">
+              ⭐ {movie.vote_average} / 10
+            </ThemedText>
 
-          {/* ▶️ Trailer Button */}
-          {trailerKey && (
-            <TouchableOpacity
-              onPress={() =>
-                Linking.openURL(
-                  `https://www.youtube.com/watch?v=${trailerKey}`
-                )
-              }
-              style={[
-                styles.trailerBtn,
-                { backgroundColor: theme.primary },
-              ]}
-            >
-              <ThemedText style={{ color: theme.textInverse }}>
-                ▶ Watch Trailer
-              </ThemedText>
-            </TouchableOpacity>
-          )}
-        </View>
-      </ScrollView>
-    </ThemedView>
+            <ThemedText style={styles.overview}>
+              {movie.overview}
+            </ThemedText>
+
+            <ThemedText type="small" style={{ marginTop: 10 }}>
+              Release: {movie.release_date}
+            </ThemedText>
+
+            {/* ▶️ Trailer Button */}
+            {trailerKey && (
+              <TouchableOpacity
+                onPress={() =>
+                  Linking.openURL(
+                    `https://www.youtube.com/watch?v=${trailerKey}`
+                  )
+                }
+                style={[
+                  styles.trailerBtn,
+                  { backgroundColor: theme.primary },
+                ]}
+              >
+                <ThemedText style={{ color: theme.textInverse }}>
+                  ▶ Watch Trailer
+                </ThemedText>
+              </TouchableOpacity>
+            )}
+
+          </View>
+
+        </ScrollView>
+
+      </ThemedView>
+    </SafeAreaView>
   );
 }
 

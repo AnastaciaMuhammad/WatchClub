@@ -92,4 +92,8 @@ const styles = StyleSheet.create({
     fontSize: 14, 
     fontWeight: '500'
   },
+  error: {
+    color: "#ff4d4d",              // bright red (visible on black)
+    fontSize: 14,
+  },
 });

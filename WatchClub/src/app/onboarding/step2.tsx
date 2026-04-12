@@ -29,7 +29,7 @@ const GENRES = [
 export default function StepTwo() {
   const router = useRouter();
   const { name, setUser } = useUser();
-  const [selected, setSelected] = useState<string[]>(["Drama", "Thriller", "Animation"]);
+  const [selected, setSelected] = useState<string[]>(["Drama", "Comedy", "Animation"]);
   const [error, setError] = useState('');
 
   const toggleGenre = (genre: string) => {
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   chip: { paddingHorizontal: 18, paddingVertical: 10, borderRadius: 25, borderWidth: 1, borderColor: '#333', backgroundColor: '#1A1A1A' },
   selectedChip: { backgroundColor: '#1655E8', borderColor: '#1655E8' },
   chipText: { color: '#fff', fontSize: 14, fontWeight: '500' },
-  error: { color: '#ff4d4d', fontSize: 13, marginBottom: 8 },
+  error: { color: 'red', fontSize: 14},
   buttonSpacer: { height: 30 },
   footer: { position: 'absolute', bottom: 40, left: 0, right: 0, alignItems: 'center' },
   stepText: { color: '#666', fontSize: 14, fontWeight: '500' },
