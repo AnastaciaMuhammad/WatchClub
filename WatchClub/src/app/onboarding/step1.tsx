@@ -2,34 +2,49 @@ import { View, Text, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
-import React from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useUser } from '../../context/usercontent';
 
 export default function StepOne() {
   const router = useRouter();
+  const { setUser } = useUser();
+  const [name, setName] = useState('');
+  const [error, setError] = useState('');
+
+  function handleContinue() {
+    if (name.trim().length < 3) {
+      setError('Name must be at least 3 characters.');
+      return;
+    }
+    setError('');
+    setUser(name.trim(), []); // genres filled in step2
+    router.push('/onboarding/step2');
+  }
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Main Content Area shifted upward */}
       <View style={styles.contentBlock}>
         <Text style={styles.title}>Welcome</Text>
         <Text style={styles.subtitle}>
           Create your profile to start watching together.
         </Text>
-        
-        {/* Input follows subtitle with consistent spacing */}
-        <Input label="Your Name" placeholder="Enter name" />
 
-        {/* This creates the gap between the box and the button */}
-        <View style={styles.buttonSpacer} />
-
-        <Button 
-          title="Continue" 
-          onPress={() => router.push('/onboarding/step2')} 
+        <Input
+          label="Your Name"
+          placeholder="Enter name"
+          value={name}
+          onChangeText={(text) => {
+            setName(text);
+            if (error && text.trim().length >= 3) setError('');
+          }}
         />
+        {error ? <Text style={styles.error}>{error}</Text> : null}
+
+        <View style={styles.buttonSpacer} />
+        <Button title="Continue" onPress={handleContinue} />
       </View>
 
-      {/* Footer Area - Pinned to the bottom */}
       <View style={styles.footer}>
         <Text style={styles.stepText}>1 of 3</Text>
       </View>

@@ -5,7 +5,7 @@ import { SuccessModal } from '../../components/ui/Modal';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const SERVICES = ["Netflix", "Hulu", "Disney+", "Prime Video", "HBO Max", "Apple TV+", "Paramount+", "Peacock", "Crunchyroll", "YouTube TV"];
+const SERVICES = ["Netflix","Hulu","Disney+","Prime Video","HBO Max","Apple TV+","Paramount+","Peacock","Crunchyroll","YouTube TV"];
 
 export default function StepThree() {
   const router = useRouter();
@@ -14,11 +14,9 @@ export default function StepThree() {
   const [lastConnected, setLastConnected] = useState("");
 
   const toggleService = (service: string) => {
-    const isConnecting = !selectedServices.includes(service);
-    
-    if (isConnecting) {
+    if (!selectedServices.includes(service)) {
       setLastConnected(service);
-      setModalVisible(true); // Show pop-up when connecting
+      setModalVisible(true);
       setSelectedServices([...selectedServices, service]);
     } else {
       setSelectedServices(selectedServices.filter(s => s !== service));
@@ -30,12 +28,12 @@ export default function StepThree() {
       <View style={styles.contentBlock}>
         <Text style={styles.title}>Streaming Services</Text>
         <Text style={styles.subtitle}>Connect your primary streaming services.</Text>
-        
+
         <View style={styles.scrollWrapper}>
           <ScrollView showsVerticalScrollIndicator={false}>
             {SERVICES.map((service) => (
-              <TouchableOpacity 
-                key={service} 
+              <TouchableOpacity
+                key={service}
                 style={[
                   styles.serviceRow, 
                   selectedServices.includes(service) && styles.activeRow
@@ -65,8 +63,8 @@ export default function StepThree() {
         <Text style={styles.stepText}>3 of 3</Text>
       </View>
 
-      <SuccessModal 
-        visible={modalVisible} 
+      <SuccessModal
+        visible={modalVisible}
         onClose={() => setModalVisible(false)}
         title="Connected!"
         message={`${lastConnected} has been successfully linked to your Watch Club account.`}
