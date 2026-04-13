@@ -239,7 +239,7 @@ export default function HomeScreen() {
           {/* AI PICKS */}
           <View style={styles.section}>
             <View style={styles.aiHeader}>
-              <ThemedText type="subtitle">AI Picks for You</ThemedText>
+              <ThemedText type="smallBold">AI Picks for You</ThemedText>
               <TouchableOpacity onPress={() => router.push('/aipicks')}>
                 <ThemedText style={{ color: theme.primary }}>
                   See More →
