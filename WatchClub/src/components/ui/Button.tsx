@@ -1,4 +1,7 @@
 import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
+import { Colors } from '@/constants/theme';
+
+const D = Colors.dark;
 
 interface ButtonProps {
   title: string;
@@ -12,31 +15,43 @@ export function Button({ title, onPress, variant = 'primary', style }: ButtonPro
   const isGhost = variant === 'ghost';
 
   return (
-    <TouchableOpacity 
-      onPress={onPress} 
-      style={[
-        styles.button, 
-        isOutline && styles.outline, 
-        isGhost && styles.ghost,
-        style
-      ]}
+    <TouchableOpacity
+      onPress={onPress}
+      style={[styles.button, isOutline && styles.outline, isGhost && styles.ghost, style]}
     >
-      <Text style={[styles.text, isOutline && styles.outlineText]}>{title}</Text>
+      <Text style={[styles.text, isOutline && styles.outlineText, isGhost && styles.ghostText]}>
+        {title}
+      </Text>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: D.primary,
     padding: 16,
     borderRadius: 30,
     alignItems: 'center',
     width: '100%',
     marginVertical: 8,
   },
-  outline: { backgroundColor: 'transparent', borderWidth: 1, borderColor: '#007AFF' },
-  ghost: { backgroundColor: 'transparent' },
-  text: { color: '#fff', fontSize: 16, fontWeight: '600' },
-  outlineText: { color: '#007AFF' },
+  outline: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: D.primary,
+  },
+  ghost: {
+    backgroundColor: 'transparent',
+  },
+  text: {
+    color: D.textPrimary,
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  outlineText: {
+    color: D.primary,
+  },
+  ghostText: {
+    color: D.primary,
+  },
 });

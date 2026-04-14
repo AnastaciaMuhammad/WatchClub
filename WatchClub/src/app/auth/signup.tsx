@@ -1,8 +1,10 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useRouter, Link } from 'expo-router';
-import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { AppStyles } from '@/constants/appstyles';
 import React, { useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SignUp() {
   const router = useRouter();
@@ -10,93 +12,44 @@ export default function SignUp() {
   const [error, setError] = useState('');
 
   const handleSignUp = () => {
-    if (!agreed) {
-      setError('You must accept the terms and conditions');
-      return;
-    }
-
+    if (!agreed) { setError('You must accept the terms and conditions'); return; }
     setError('');
     router.push('/onboarding/step1');
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Sign Up</Text>
-      
+    <SafeAreaView style={AppStyles.screenCentered}>
+      <Text style={AppStyles.title}>Sign Up</Text>
       <Input label="Email" placeholder="jenni.sald04@gmail.com" />
       <Input label="New Password" placeholder="••••••••" secureTextEntry />
       <Input label="Confirm Password" placeholder="••••••••" secureTextEntry />
-      
-      <View style={styles.checkboxRow}>
-        <TouchableOpacity 
-          style={styles.checkboxContainer} 
-          onPress={() => {
-            setAgreed(!agreed);
-            if (error) setError('');
-          }}
-        >
-          <View style={[styles.checkbox, agreed && styles.checked]} />
-          <Text style={styles.checkboxLabel}>
-            I agree with <Text style={styles.required}>*</Text>
-          </Text>
+      <View style={AppStyles.checkboxRow}>
+        <TouchableOpacity style={AppStyles.checkboxRow} onPress={() => { setAgreed(!agreed); if (error) setError(''); }}>
+          <View style={[AppStyles.checkbox, agreed && AppStyles.checkboxChecked]} />
+          <Text style={AppStyles.checkboxLabel}>I agree with <Text style={{ color: '#ff4d4d' }}>*</Text></Text>
         </TouchableOpacity>
-        
         <Link href="/auth/terms" asChild>
           <TouchableOpacity>
-            <Text style={styles.termsLink}>terms and conditions</Text>
+            <Text style={[AppStyles.linkText, { textDecorationLine: 'underline', marginLeft: 4 }]}>terms and conditions</Text>
           </TouchableOpacity>
         </Link>
       </View>
-
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}
-
+      {error ? <Text style={AppStyles.errorText}>{error}</Text> : null}
       <Button title="Sign Up" onPress={handleSignUp} />
-      
-      <View style={styles.dividerContainer}>
-        <View style={styles.line} />
-        <Text style={styles.orText}>or with</Text>
-        <View style={styles.line} />
+      <View style={AppStyles.dividerRow}>
+        <View style={AppStyles.dividerLine} />
+        <Text style={AppStyles.dividerText}>or with</Text>
+        <View style={AppStyles.dividerLine} />
       </View>
-
       <Button title="Sign up with Google" variant="outline" onPress={() => {}} />
       <Button title="Sign up with Apple" variant="outline" onPress={() => {}} />
-      
       <Link href="/auth/signin" asChild>
         <TouchableOpacity>
-          <Text style={styles.footer}>
-            Already have an account? <Text style={styles.signInLink}>Sign in</Text>
+          <Text style={AppStyles.footerText}>
+            Already have an account? <Text style={AppStyles.linkText}>Sign in</Text>
           </Text>
         </TouchableOpacity>
       </Link>
-    </View>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#000', padding: 24, justifyContent: 'center' },
-  title: { fontSize: 32, color: '#fff', fontWeight: 'bold', marginBottom: 32 },
-  
-  checkboxRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
-  checkboxContainer: { flexDirection: 'row', alignItems: 'center' },
-  checkbox: { width: 20, height: 20, borderRadius: 4, borderWidth: 1, borderColor: '#1655E8', marginRight: 10 },
-  checked: { backgroundColor: '#1655E8' },
-  checkboxLabel: { color: '#fff', fontSize: 14 },
-  termsLink: { color: '#1655E8', fontSize: 14, textDecorationLine: 'underline' },
-
-  required: {
-    color: 'red',
-  },
-
-  errorText: {
-    color: 'red',
-    fontSize: 12,
-    marginBottom: 16,
-  },
-
-  dividerContainer: { flexDirection: 'row', alignItems: 'center', marginVertical: 20 },
-  line: { flex: 1, height: 1, backgroundColor: '#333' },
-  orText: { color: '#666', paddingHorizontal: 10, fontSize: 14 },
-
-  footer: { color: '#fff', textAlign: 'center', marginTop: 24 },
-  signInLink: { color: '#1655E8', textDecorationLine: 'underline', fontWeight: 'bold' }
-});

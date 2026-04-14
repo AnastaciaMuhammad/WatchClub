@@ -68,9 +68,7 @@ export default function MovieScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
-      <ThemedView style={styles.container}>
-
-        {/* 🔙 Back Button */}
+      {/* 🔙 Back Button */}
         <TouchableOpacity
           onPress={() => router.back()}
           style={[styles.backBtn, { backgroundColor: theme.surface }]}
@@ -85,6 +83,8 @@ export default function MovieScreen() {
         >
           <ThemedText>{isFavorite ? "❤️" : "🤍"}</ThemedText>
         </TouchableOpacity>
+      <ThemedView style={styles.container}>
+
 
         <ScrollView>
 
@@ -94,6 +94,7 @@ export default function MovieScreen() {
               uri: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
             }}
             style={styles.image}
+            resizeMode="contain"
           />
 
           {/* 📄 Content */}
@@ -146,9 +147,9 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: "100%",
-    height: 400,
-  },
+  width: "100%",
+  aspectRatio: 2 / 3, 
+},
 
   content: {
     padding: 20,

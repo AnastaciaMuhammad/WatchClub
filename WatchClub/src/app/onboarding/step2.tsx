@@ -1,9 +1,13 @@
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Button } from '../../components/ui/Button';
+import { Button } from '@/components/ui/Button';
+import { AppStyles } from '@/constants/appstyles';
+import { useUser } from '@/context/usercontent';
+import { Colors } from '@/constants/theme';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useUser } from '../../context/usercontent';
+
+const D = Colors.dark;
 
 const GENRES = [
   "Action","Adventure","Animation","Anime","Comedy","Romance Comedy","Dark Comedy",
@@ -32,66 +36,46 @@ export default function StepTwo() {
   const [selected, setSelected] = useState<string[]>(["Drama", "Comedy", "Animation"]);
   const [error, setError] = useState('');
 
-  const toggleGenre = (genre: string) => {
-    setSelected(prev =>
-      prev.includes(genre) ? prev.filter(g => g !== genre) : [...prev, genre]
-    );
+  const toggle = (g: string) => {
+    setSelected(p => p.includes(g) ? p.filter(x => x !== g) : [...p, g]);
     if (error) setError('');
   };
 
   function handleContinue() {
-    if (selected.length < 3) {
-      setError('Please select at least 3 genres.');
-      return;
-    }
+    if (selected.length < 3) { setError('Please select at least 3 genres.'); return; }
     setUser(name, selected);
     router.push('/onboarding/step3');
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.contentBlock}>
-        <Text style={styles.title}>Pick Your Genres</Text>
-        <Text style={styles.subtitle}>Select at least 3 genres you enjoy.</Text>
-
+    <SafeAreaView style={AppStyles.screen}>
+      <View style={AppStyles.contentBlock}>
+        <Text style={AppStyles.title}>Pick Your Genres</Text>
+        <Text style={AppStyles.subtitle}>Select at least 3 genres you enjoy.</Text>
         <View style={styles.scrollWrapper}>
           <ScrollView contentContainerStyle={styles.chipContainer} showsVerticalScrollIndicator={false}>
-            {GENRES.map((genre) => (
-              <TouchableOpacity
-                key={genre}
-                style={[styles.chip, selected.includes(genre) && styles.selectedChip]}
-                onPress={() => toggleGenre(genre)}
-              >
-                <Text style={styles.chipText}>{genre}</Text>
+            {GENRES.map(g => (
+              <TouchableOpacity key={g} style={[styles.chip, selected.includes(g) && styles.selectedChip]} onPress={() => toggle(g)}>
+                <Text style={styles.chipText}>{g}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
-
-        {error ? <Text style={styles.error}>{error}</Text> : null}
-        <View style={styles.buttonSpacer} />
+        {error ? <Text style={AppStyles.errorText}>{error}</Text> : null}
+        <View style={AppStyles.spacerMd} />
         <Button title="Continue" onPress={handleContinue} />
       </View>
-
-      <View style={styles.footer}>
-        <Text style={styles.stepText}>2 of 3</Text>
+      <View style={AppStyles.footer}>
+        <Text style={AppStyles.stepText}>2 of 3</Text>
       </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#000', padding: 24 },
-  contentBlock: { flex: 1, justifyContent: 'flex-start', paddingTop: 80 },
-  title: { fontSize: 32, color: '#fff', fontWeight: 'bold', textAlign: 'left', marginBottom: 12 },
-  subtitle: { color: '#aaa', fontSize: 16, textAlign: 'left', marginBottom: 32, lineHeight: 24 },
   scrollWrapper: { height: 380, marginBottom: 8 },
-  chipContainer: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start', gap: 10, paddingBottom: 20 },
-  chip: { paddingHorizontal: 18, paddingVertical: 10, borderRadius: 25, borderWidth: 1, borderColor: '#333', backgroundColor: '#1A1A1A' },
-  selectedChip: { backgroundColor: '#1655E8', borderColor: '#1655E8' },
-  chipText: { color: '#fff', fontSize: 14, fontWeight: '500' },
-  error: { color: 'red', fontSize: 14},
-  buttonSpacer: { height: 30 },
-  footer: { position: 'absolute', bottom: 40, left: 0, right: 0, alignItems: 'center' },
-  stepText: { color: '#666', fontSize: 14, fontWeight: '500' },
+  chipContainer: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, paddingBottom: 20 },
+  chip: { paddingHorizontal: 18, paddingVertical: 10, borderRadius: 25, borderWidth: 1, borderColor: '#333', backgroundColor: D.surface },
+  selectedChip: { backgroundColor: D.primary, borderColor: D.primary },
+  chipText: { color: D.textPrimary, fontSize: 14, fontWeight: '500' },
 });
