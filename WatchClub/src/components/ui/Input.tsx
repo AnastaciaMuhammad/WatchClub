@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, View, Text, TextInputProps } from 'react-native';
+import {
+  TextInput,
+  View,
+  Text,
+  TextInputProps,
+  StyleSheet,
+} from 'react-native';
+
+import { useTheme } from '@/hooks/use-theme';
+import { Radius, Spacing } from '@/constants/theme';
 
 interface InputProps extends TextInputProps {
   label?: string;
@@ -7,36 +16,55 @@ interface InputProps extends TextInputProps {
 
 export function Input({ label, ...props }: InputProps) {
   const [isFocused, setIsFocused] = useState(false);
+  const theme = useTheme();
 
   return (
     <View style={styles.container}>
-      {label && <Text style={styles.label}>{label}</Text>}
-      <TextInput 
+      {label && (
+        <Text
+          style={[
+            styles.label,
+            { color: theme.textPrimary },
+          ]}
+        >
+          {label}
+        </Text>
+      )}
+
+      <TextInput
         style={[
-          styles.input, 
-          isFocused && styles.inputFocused // Apply blue border on focus
-        ]} 
+          styles.input,
+          {
+            backgroundColor: theme.surface,
+            color: theme.textPrimary,
+            borderColor: isFocused
+              ? theme.primary
+              : theme.border,
+          },
+        ]}
+        placeholderTextColor={theme.muted ?? theme.border}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        placeholderTextColor="#666"
-        {...props} 
+        {...props}
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { marginBottom: 16, width: '100%' },
-  label: { color: '#fff', marginBottom: 8, fontSize: 14 },
-  input: {
-    backgroundColor: '#1A1A1A',
-    color: '#fff',
-    padding: 15,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#333',
+  container: {
+    marginBottom: Spacing.four,
+    width: '100%',
   },
-  inputFocused: {
-    borderColor: '#1655E8', // Your WatchClub Primary Blue
+
+  label: {
+    marginBottom: Spacing.two,
+    fontSize: 14,
+  },
+
+  input: {
+    padding: Spacing.three,
+    borderRadius: Radius.md,
+    borderWidth: 1,
   },
 });

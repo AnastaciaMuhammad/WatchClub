@@ -2,33 +2,26 @@ import React from 'react';
 import { ThemeProvider, DefaultTheme } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+
 import { useTheme } from '@/hooks/use-theme';
-import { Colors } from '@/constants/theme';
+// import { Colors } from '@/constants/theme';
 import { UserProvider } from '../context/usercontent';
 
 export default function RootLayout() {
   const theme = useTheme();
-
-  const navFonts = {
-    regular: { fontFamily: 'System', fontWeight: '400' as const },
-    medium: { fontFamily: 'System', fontWeight: '500' as const },
-    bold: { fontFamily: 'System', fontWeight: '700' as const },
-    heavy: { fontFamily: 'System', fontWeight: '900' as const },
-  };
 
   const navigationTheme = {
     ...DefaultTheme,
     dark: true,
     colors: {
       ...DefaultTheme.colors,
-      primary: Colors.dark.primary,
-      background: Colors.dark.background,
-      card: Colors.dark.surface,
-      text: Colors.dark.textPrimary,
-      border: Colors.dark.border,
-      notification: Colors.dark.primary,
+      primary: theme.primary,
+      background: theme.background,
+      card: theme.surface,
+      text: theme.textPrimary,
+      border: theme.border,
+      notification: theme.primary,
     },
-    fonts: navFonts,
   };
 
   if (!theme) return null;
@@ -37,7 +30,7 @@ export default function RootLayout() {
     <UserProvider>
       <SafeAreaProvider>
         <ThemeProvider value={navigationTheme}>
-          <Stack screenOptions={{ headerShown: false }} initialRouteName="index">
+          <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="index" />
             <Stack.Screen name="welcome" />
             <Stack.Screen name="auth/signup" />

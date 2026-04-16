@@ -23,8 +23,11 @@ export const Colors = {
     textInverse: "#FFFFFF",     // Highlighed Card Text
     
     border: "#1655E8",          // Card Background
-      
+     
+    muted: "#888888",
     disabled: "#A0A0A0",
+    errorText: "#ff4d4d",
+    link: "#1655E8",
   },
   dark: {
     primary: "#1655E8",
@@ -39,6 +42,9 @@ export const Colors = {
     border: "#1655E8",
 
     muted: "#888888",
+    disabled: "#A0A0A0",
+    errorText: "#ff4d4d",
+    link: "#1655E8",
   },
 } as const;
 
@@ -81,6 +87,14 @@ export const Spacing = {
   four: 24,
   five: 32,
   six: 64,
+} as const;
+
+/** Radius Tokens */
+export const Radius = {
+  sm: 6,
+  md: 10,
+  lg: 20,
+  pill: 999,
 } as const;
 
 /** Tab Layout Helpers */

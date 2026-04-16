@@ -35,7 +35,7 @@ export default function ForgotPassword() {
         {/* Consistent spacing between input and button */}
         <View style={styles.buttonSpacer} />
 
-        <Button title="Send Link" onPress={handleSendLink} />
+        <Button label="Send Link" onPress={handleSendLink} />
       </View>
 
       {/* Pop-up Component */}

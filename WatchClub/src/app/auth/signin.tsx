@@ -1,99 +1,97 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useRouter, Link } from 'expo-router';
-import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
 import React, { useState } from 'react';
+import { View, TouchableOpacity } from 'react-native';
+import { useRouter, Link } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Divider } from '@/components/ui/Divider';
+
+import { ThemedText } from '@/components/themed-text';
+
+import { Layout } from '@/constants/layout';
+import { useTheme } from '@/hooks/use-theme';
 
 export default function SignIn() {
   const router = useRouter();
+  const theme = useTheme();
+
   const [rememberMe, setRememberMe] = useState(false);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Sign In</Text>
-      
-      <Input label="Email" placeholder="Enter email" />
-      <Input label="Password" placeholder="Enter password" secureTextEntry />
+    <SafeAreaView
+      style={[
+        Layout.formScreen,
+        { backgroundColor: theme.background },
+      ]}
+    >
+      {/* Title */}
+      <ThemedText type="title">
+        Sign In
+      </ThemedText>
 
-      {/* Row with Remember Me and Forgot Password */}
-      <View style={styles.row}>
-        <TouchableOpacity 
-          style={styles.checkboxContainer} 
-          onPress={() => setRememberMe(!rememberMe)}
-        >
-          <View style={[styles.checkbox, rememberMe && styles.checkboxChecked]} />
-          <Text style={styles.checkboxLabel}>Remember Me</Text>
-        </TouchableOpacity>
+      {/* Form */}
+      <View style={Layout.formBlock}>
 
-        <Link href="/auth/forgot-password" style={styles.forgot}>
-          Forgot Password?
-        </Link>
+        {/* Inputs */}
+        <Input label="Email" placeholder="Enter email" />
+        <Input label="Password" placeholder="Enter password" secureTextEntry />
+
+        {/* Row */}
+        <View style={Layout.rowBetween}>
+          {/* Checkbox */}
+          <Checkbox
+            checked={rememberMe}
+            onChange={setRememberMe}
+            label="Remember Me"
+          />
+
+          {/* Forgot Password */}
+          <Link href="/auth/forgot-password" asChild>
+            <TouchableOpacity>
+              <ThemedText type="small" style={{ color: theme.primary }}>
+                Forgot Password?
+              </ThemedText>
+            </TouchableOpacity>
+          </Link>
+
+        </View>
+
+        {/* Main Button */}
+        <Button
+          label="Sign In"
+          onPress={() => router.push('/(tabs)/home')}
+        />
+
+        {/* Divider */}
+        <Divider />
+
+        {/* OAuth */}
+        <Button
+          label="Sign in with Google"
+          variant="outline"
+        />
+
+        <Button
+          label="Sign in with Apple"
+          variant="outline"
+        />
+
       </View>
-      
-      <Button title="Sign In" onPress={() => router.push('/(tabs)/home')} />
-      
-      {/* Divider with lines */}
-      <View style={styles.dividerContainer}>
-        <View style={styles.line} />
-        <Text style={styles.orText}>or with</Text>
-        <View style={styles.line} />
-      </View>
 
-      <Button title="Sign in with Google" variant="outline" onPress={() => {}} />
-      <Button title="Sign in with Apple" variant="outline" onPress={() => {}} />
-      
+      {/* Footer */}
       <Link href="/auth/signup" asChild>
-        <TouchableOpacity>
-          <Text style={styles.footer}>
-            Don't have an account? <Text style={styles.linkText}>Sign up</Text>
-          </Text>
+        <TouchableOpacity style={{ marginTop: 24 }}>
+          <ThemedText type="small">
+            Don’t have an account?{' '}
+            <ThemedText style={{ color: theme.primary }}>
+              Sign up
+            </ThemedText>
+          </ThemedText>
         </TouchableOpacity>
       </Link>
-    </View>
+
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#000', padding: 24, justifyContent: 'center' },
-  title: { fontSize: 32, color: '#fff', fontWeight: 'bold', marginBottom: 32 },
-  
-  // Layout Row for Remember Me & Forgot Password
-  row: { 
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    alignItems: 'center', 
-    marginBottom: 24 
-  },
-  
-  // Checkbox Styles
-  checkboxContainer: { flexDirection: 'row', alignItems: 'center' },
-  checkbox: { 
-    width: 18, 
-    height: 18, 
-    borderRadius: 4, 
-    borderWidth: 1, 
-    borderColor: '#1655E8', 
-    marginRight: 8 
-  },
-  checkboxChecked: { backgroundColor: '#1655E8' },
-  checkboxLabel: { color: '#fff', fontSize: 14 },
-  
-  // Underlined Link
-  forgot: { 
-    color: '#666', 
-    fontSize: 14, 
-    textDecorationLine: 'underline' 
-  },
-
-  // Divider lines for "or with"
-  dividerContainer: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    marginVertical: 20 
-  },
-  line: { flex: 1, height: 1, backgroundColor: '#333' },
-  orText: { color: '#666', paddingHorizontal: 10, fontSize: 14 },
-
-  footer: { color: '#fff', textAlign: 'center', marginTop: 24 },
-  linkText: { color: '#1655E8', fontWeight: '600' }
-});

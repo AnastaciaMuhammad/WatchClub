@@ -18,7 +18,7 @@ export function SuccessModal({ visible, onClose, title, message }: CustomModalPr
             <View style={styles.modalContainer}>
               <Text style={styles.title}>{title}</Text>
               <Text style={styles.message}>{message}</Text>
-              <Button title="Back to Sign In" onPress={onClose} />
+              <Button label="Back to Sign In" onPress={onClose} />
             </View>
           </TouchableWithoutFeedback>
         </View>

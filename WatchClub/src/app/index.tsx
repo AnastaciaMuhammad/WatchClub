@@ -1,19 +1,22 @@
 import { useEffect } from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useTheme } from '@/hooks/use-theme';
 
 export default function SplashScreen() {
   const router = useRouter();
+  const theme = useTheme();
 
   useEffect(() => {
     const timer = setTimeout(() => {
       router.replace('/welcome');
     }, 2000);
+
     return () => clearTimeout(timer);
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Image
         source={require('@/assets/images/logo_transparent.png')}
         style={styles.logo}
@@ -26,7 +29,6 @@ export default function SplashScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000',
     justifyContent: 'center',
     alignItems: 'center',
   },
