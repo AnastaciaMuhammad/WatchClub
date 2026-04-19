@@ -470,7 +470,7 @@ export default function PartiesScreen() {
           </View>
         )}
 
-        {/* ─── Past Parties ─── */}
+        {/* ─── Past Parties ─── */} 
         {activeTab === 'past' && (
           <View style={{ gap: Spacing.two }}>
             {pastParties.length === 0 ? (
