@@ -12,8 +12,8 @@ export default function SignIn() {
   return (
     <SafeAreaView style={AppStyles.screenCentered}>
       <Text style={AppStyles.title}>Sign In</Text>
-      <Input label="Email" placeholder="Enter email" />
-      <Input label="Password" placeholder="Enter password" secureTextEntry />
+      <Input label="Email" placeholder="jenni.sald04@gmail.com" />
+      <Input label="Password" placeholder="••••••••" secureTextEntry />
       <View style={AppStyles.checkboxRow}>
         <TouchableOpacity style={AppStyles.checkboxRow} onPress={() => setRememberMe(!rememberMe)}>
           <View style={[AppStyles.checkbox, rememberMe && AppStyles.checkboxChecked]} />

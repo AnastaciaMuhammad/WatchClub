@@ -18,16 +18,6 @@ export default function RootLayout() {
 
   const navigationTheme = {
     ...DefaultTheme,
-    dark: true,
-    colors: {
-      ...DefaultTheme.colors,
-      primary: Colors.dark.primary,
-      background: Colors.dark.background,
-      card: Colors.dark.surface,
-      text: Colors.dark.textPrimary,
-      border: Colors.dark.border,
-      notification: Colors.dark.primary,
-    },
     fonts: navFonts,
   };
 
