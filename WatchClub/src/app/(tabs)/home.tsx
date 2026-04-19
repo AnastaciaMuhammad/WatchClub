@@ -14,6 +14,10 @@ import { ThemedView } from '@/components/themed-view';
 import { useTheme } from '@/hooks/use-theme';
 import { useRouter } from 'expo-router';
 import { useUser } from '../../context/usercontent';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import { Ionicons } from '@expo/vector-icons';
+
+
 
 const API_KEY = "63b1af1c793166c15a7ecda62a6c61ac";
 const STREAK = 10;
@@ -75,8 +79,8 @@ function MovieCard({ item }) {
           </ThemedText>
 
           <View style={styles.ratingRow}>
-            <ThemedText style={styles.star}>★</ThemedText>
-            <ThemedText type="smallBold">
+<Ionicons name="star" size={15} color="#ffffff" />            
+<ThemedText type="smallBold">
               {item.vote_average ? item.vote_average.toFixed(1) : '—'}
             </ThemedText>
           </View>
@@ -87,6 +91,11 @@ function MovieCard({ item }) {
       <View style={styles.buttonRow}>
 
         <TouchableOpacity
+          onPress={() =>
+            router.push(
+              `/create?movieId=${item.id}&movieTitle=${encodeURIComponent(item.title)}&moviePoster=${encodeURIComponent(item.poster_path ?? '')}`
+            )
+          }
           style={[styles.watchBtn, { backgroundColor: theme.primary }]}
         >
           <ThemedText type="smallBold" themeColor="textInverse">
@@ -220,10 +229,10 @@ export default function HomeScreen() {
                 </ThemedText>
               </View>
 
-              {/* 🔥 STREAK */}
+              {/* STREAK */}
               <View style={[styles.streakBadge, { borderColor: theme.border }]}>
-                <ThemedText>🔥</ThemedText>
-                <View>
+                <FontAwesome5 name="fire" size={24} color="red" />                
+                  <View>
                   <ThemedText type="smallBold" style={{ color: theme.primary }}>
                     {STREAK}
                   </ThemedText>

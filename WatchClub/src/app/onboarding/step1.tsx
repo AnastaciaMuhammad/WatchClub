@@ -42,7 +42,7 @@ export default function StepOne() {
         {error ? <Text style={styles.error}>{error}</Text> : null}
 
         <View style={styles.buttonSpacer} />
-        <Button title="Continue" onPress={handleContinue} />
+        <Button label="Continue" onPress={handleContinue} />
       </View>
 
       <View style={styles.footer}>

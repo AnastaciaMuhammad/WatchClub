@@ -14,6 +14,8 @@ import * as Linking from "expo-linking";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { useTheme } from "@/hooks/use-theme";
+import { Ionicons } from '@expo/vector-icons';
+
 
 const API_KEY = "63b1af1c793166c15a7ecda62a6c61ac";
 
@@ -29,10 +31,8 @@ export default function MovieScreen() {
   const [trailerKey, setTrailerKey] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
 
-  // 🎬 Fetch movie details
   useEffect(() => {
     if (!movieId) return;
-
     fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}`)
       .then((res) => res.json())
       .then((data) => {
@@ -42,17 +42,14 @@ export default function MovieScreen() {
       .catch(() => setLoading(false));
   }, [movieId]);
 
-  // ▶️ Fetch trailer
   useEffect(() => {
     if (!movieId) return;
-
     fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${API_KEY}`)
       .then((res) => res.json())
       .then((data) => {
         const trailer = data.results?.find(
-          (vid) => vid.type === "Trailer" && vid.site === "YouTube"
+          (vid: any) => vid.type === "Trailer" && vid.site === "YouTube"
         );
-
         setTrailerKey(trailer ? trailer.key : null);
       })
       .catch(() => setTrailerKey(null));
@@ -60,7 +57,9 @@ export default function MovieScreen() {
 
   if (loading || !movie) {
     return (
-      <SafeAreaView style={[styles.container, { justifyContent: "center" }]}>
+      <SafeAreaView
+        style={[styles.container, { backgroundColor: theme.background, justifyContent: "center" }]}
+      >
         <ActivityIndicator />
       </SafeAreaView>
     );
@@ -70,7 +69,7 @@ export default function MovieScreen() {
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
       <ThemedView style={styles.container}>
 
-        {/* 🔙 Back Button */}
+        {/* ← Back Button — fixed top-left, same as aipicks */}
         <TouchableOpacity
           onPress={() => router.back()}
           style={[styles.backBtn, { backgroundColor: theme.surface }]}
@@ -78,7 +77,7 @@ export default function MovieScreen() {
           <ThemedText>←</ThemedText>
         </TouchableOpacity>
 
-        {/* ❤️ Favorite Button */}
+        {/*Favorite Button — fixed top-right */}
         <TouchableOpacity
           onPress={() => setIsFavorite(!isFavorite)}
           style={[styles.favBtn, { backgroundColor: theme.surface }]}
@@ -86,22 +85,21 @@ export default function MovieScreen() {
           <ThemedText>{isFavorite ? "❤️" : "🤍"}</ThemedText>
         </TouchableOpacity>
 
-        <ScrollView>
+        <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
 
-          {/* 🎬 Poster */}
+          {/* Poster */}
           <Image
-            source={{
-              uri: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
-            }}
+            source={{ uri: `https://image.tmdb.org/t/p/w500${movie.poster_path}` }}
             style={styles.image}
           />
 
-          {/* 📄 Content */}
+          {/* Content */}
           <View style={styles.content}>
             <ThemedText type="title">{movie.title}</ThemedText>
 
             <ThemedText type="small" themeColor="disabled">
-              ⭐ {movie.vote_average} / 10
+              <Ionicons name="star" size={15} color="#ffffff" />            
+                {movie.vote_average} / 10
             </ThemedText>
 
             <ThemedText style={styles.overview}>
@@ -112,27 +110,34 @@ export default function MovieScreen() {
               Release: {movie.release_date}
             </ThemedText>
 
-            {/* ▶️ Trailer Button */}
+            {/* Watch Party Button */}
+            <TouchableOpacity
+              onPress={() =>
+                router.push(
+                  `/create?movieId=${movie.id}&movieTitle=${encodeURIComponent(movie.title)}&moviePoster=${encodeURIComponent(movie.poster_path ?? '')}`
+                )
+              }
+              style={[styles.watchPartyBtn, { backgroundColor: theme.primary }]}
+            >
+              <ThemedText style={{ color: theme.textInverse, fontWeight: "700" }}>
+                Start Watch Party
+              </ThemedText>
+            </TouchableOpacity>
+
+            {/* Trailer Button */}
             {trailerKey && (
               <TouchableOpacity
                 onPress={() =>
-                  Linking.openURL(
-                    `https://www.youtube.com/watch?v=${trailerKey}`
-                  )
+                  Linking.openURL(`https://www.youtube.com/watch?v=${trailerKey}`)
                 }
-                style={[
-                  styles.trailerBtn,
-                  { backgroundColor: theme.primary },
-                ]}
+                style={[styles.trailerBtn, { backgroundColor: theme.surface, borderWidth: 1, borderColor: theme.border }]}
               >
-                <ThemedText style={{ color: theme.textInverse }}>
+                <ThemedText style={{ color: theme.primary, fontWeight: "600" }}>
                   ▶ Watch Trailer
                 </ThemedText>
               </TouchableOpacity>
             )}
-
           </View>
-
         </ScrollView>
 
       </ThemedView>
@@ -152,17 +157,19 @@ const styles = StyleSheet.create({
 
   content: {
     padding: 20,
+    gap: 8,
   },
 
   overview: {
-    marginTop: 10,
-    lineHeight: 20,
+    marginTop: 6,
+    lineHeight: 22,
   },
 
+  // Positioned absolutely at top — same layout as aipicks.tsx
   backBtn: {
     position: "absolute",
-    top: 50,
-    left: 20,
+    top: 10,
+    left: 16,
     zIndex: 10,
     padding: 10,
     borderRadius: 20,
@@ -170,17 +177,24 @@ const styles = StyleSheet.create({
 
   favBtn: {
     position: "absolute",
-    top: 50,
-    right: 20,
+    top: 10,
+    right: 16,
     zIndex: 10,
     padding: 10,
     borderRadius: 20,
   },
 
+  watchPartyBtn: {
+    marginTop: 16,
+    padding: 14,
+    borderRadius: 12,
+    alignItems: "center",
+  },
+
   trailerBtn: {
-    marginTop: 20,
+    marginTop: 10,
     padding: 12,
-    borderRadius: 10,
+    borderRadius: 12,
     alignItems: "center",
   },
 });

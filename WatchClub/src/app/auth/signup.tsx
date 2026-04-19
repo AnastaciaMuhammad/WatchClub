@@ -12,11 +12,14 @@ import { ThemedText } from '@/components/themed-text';
 
 import { Layout } from '@/constants/layout';
 import { useTheme } from '@/hooks/use-theme';
+import { useUser } from '@/context/usercontent';
 
 export default function SignUp() {
   const router = useRouter();
   const theme = useTheme();
+  const { setEmail } = useUser();
 
+  const [emailValue, setEmailValue] = useState('');
   const [agreed, setAgreed] = useState(false);
   const [error, setError] = useState('');
 
@@ -25,8 +28,8 @@ export default function SignUp() {
       setError('You must accept the terms and conditions');
       return;
     }
-
     setError('');
+    if (emailValue) setEmail(emailValue);
     router.push('/onboarding/step1');
   };
 
@@ -46,37 +49,38 @@ export default function SignUp() {
       <View style={Layout.formBlock}>
 
         {/* Inputs */}
-        <Input label="Email" placeholder="email@example.com" />
-        <Input label="New Password" secureTextEntry />
-        <Input label="Confirm Password" secureTextEntry />
+        <Input
+          label="Email"
+          placeholder="email@example.com"
+          value={emailValue}
+          onChangeText={setEmailValue}
+        />
+        <Input 
+        label="New Password" placeholder="••••••••" secureTextEntry/>
+        <Input 
+        label="Confirm Password" placeholder="••••••••" secureTextEntry/>
 
         {/* Checkbox + Terms */}
         <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }}>
-
-        <Checkbox
-          checked={agreed}
-          onChange={(val) => {
-            setAgreed(val);
-            if (error) setError('');
-          }}
-          label="I agree with"
-        />
-
-        <Link href="/auth/terms" asChild>
-          <TouchableOpacity>
-            <ThemedText
-              type="small"
-              style={{
-                color: theme.primary,
-                marginLeft: 4,
-              }}
-            >
-              terms and conditions
-            </ThemedText>
-          </TouchableOpacity>
-        </Link>
-
-      </View>
+          <Checkbox
+            checked={agreed}
+            onChange={(val) => {
+              setAgreed(val);
+              if (error) setError('');
+            }}
+            label="I agree with"
+          />
+          <Link href="/auth/terms" asChild>
+            <TouchableOpacity>
+              <ThemedText
+                type="small"
+                style={{ color: theme.primary, marginLeft: 4 }}
+              >
+                terms and conditions
+              </ThemedText>
+            </TouchableOpacity>
+          </Link>
+        </View>
 
         {/* Error */}
         {error ? (
@@ -86,10 +90,7 @@ export default function SignUp() {
         ) : null}
 
         {/* Submit */}
-        <Button
-          label="Sign Up"
-          onPress={handleSignUp}
-        />
+        <Button label="Sign Up" onPress={handleSignUp} />
 
         {/* Divider */}
         <Divider />

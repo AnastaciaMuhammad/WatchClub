@@ -88,6 +88,11 @@ function MovieCard({ item }: any) {
         
         {/* ▶ START WATCH PARTY */}
         <TouchableOpacity
+          onPress={() =>
+            router.push(
+              `/create?movieId=${item.id}&movieTitle=${encodeURIComponent(item.title)}&moviePoster=${encodeURIComponent(item.poster_path ?? '')}`
+            )
+          }
           style={[styles.primaryBtn, { backgroundColor: theme.primary }]}
         >
           <ThemedText type="smallBold" themeColor="textInverse">

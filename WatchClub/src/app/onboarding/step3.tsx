@@ -54,7 +54,7 @@ export default function StepThree() {
         <View style={styles.buttonSpacer} />
 
         <Button 
-          title="Continue" 
+          label="Continue" 
           onPress={() => router.push('/onboarding/success')} 
         />
       </View>

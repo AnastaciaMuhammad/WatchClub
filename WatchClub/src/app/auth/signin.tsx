@@ -12,12 +12,20 @@ import { ThemedText } from '@/components/themed-text';
 
 import { Layout } from '@/constants/layout';
 import { useTheme } from '@/hooks/use-theme';
+import { useUser } from '@/context/usercontent';
 
 export default function SignIn() {
   const router = useRouter();
   const theme = useTheme();
+  const { setEmail } = useUser();
 
+  const [emailValue, setEmailValue] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+
+  const handleSignIn = () => {
+    if (emailValue) setEmail(emailValue);
+    router.push('/(tabs)/home');
+  };
 
   return (
     <SafeAreaView
@@ -35,19 +43,22 @@ export default function SignIn() {
       <View style={Layout.formBlock}>
 
         {/* Inputs */}
-        <Input label="Email" placeholder="Enter email" />
+        <Input
+          label="Email"
+          placeholder="Enter email"
+          value={emailValue}
+          onChangeText={setEmailValue}
+        />
         <Input label="Password" placeholder="Enter password" secureTextEntry />
 
         {/* Row */}
         <View style={Layout.rowBetween}>
-          {/* Checkbox */}
           <Checkbox
             checked={rememberMe}
             onChange={setRememberMe}
             label="Remember Me"
           />
 
-          {/* Forgot Password */}
           <Link href="/auth/forgot-password" asChild>
             <TouchableOpacity>
               <ThemedText type="small" style={{ color: theme.primary }}>
@@ -55,28 +66,20 @@ export default function SignIn() {
               </ThemedText>
             </TouchableOpacity>
           </Link>
-
         </View>
 
         {/* Main Button */}
         <Button
           label="Sign In"
-          onPress={() => router.push('/(tabs)/home')}
+          onPress={handleSignIn}
         />
 
         {/* Divider */}
         <Divider />
 
         {/* OAuth */}
-        <Button
-          label="Sign in with Google"
-          variant="outline"
-        />
-
-        <Button
-          label="Sign in with Apple"
-          variant="outline"
-        />
+        <Button label="Sign in with Google" variant="outline" />
+        <Button label="Sign in with Apple" variant="outline" />
 
       </View>
 
@@ -84,7 +87,7 @@ export default function SignIn() {
       <Link href="/auth/signup" asChild>
         <TouchableOpacity style={{ marginTop: 24 }}>
           <ThemedText type="small">
-            Don’t have an account?{' '}
+            Don't have an account?{' '}
             <ThemedText style={{ color: theme.primary }}>
               Sign up
             </ThemedText>
