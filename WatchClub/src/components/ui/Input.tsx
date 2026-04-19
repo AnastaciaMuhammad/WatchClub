@@ -13,7 +13,7 @@ import { Radius, Spacing } from '@/constants/theme';
 interface InputProps extends TextInputProps {
   label?: string;
 }
-
+ 
 export function Input({ label, ...props }: InputProps) {
   const [isFocused, setIsFocused] = useState(false);
   const theme = useTheme();
@@ -50,7 +50,7 @@ export function Input({ label, ...props }: InputProps) {
     </View>
   );
 }
-
+ 
 const styles = StyleSheet.create({
   container: {
     marginBottom: Spacing.four,

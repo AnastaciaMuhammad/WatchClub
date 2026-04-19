@@ -84,6 +84,8 @@ export default function MovieScreen() {
         >
           <ThemedText>{isFavorite ? "❤️" : "🤍"}</ThemedText>
         </TouchableOpacity>
+      <ThemedView style={styles.container}>
+
 
         <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
 
@@ -91,6 +93,7 @@ export default function MovieScreen() {
           <Image
             source={{ uri: `https://image.tmdb.org/t/p/w500${movie.poster_path}` }}
             style={styles.image}
+            resizeMode="contain"
           />
 
           {/* Content */}
@@ -151,9 +154,9 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: "100%",
-    height: 400,
-  },
+  width: "100%",
+  aspectRatio: 2 / 3, 
+},
 
   content: {
     padding: 20,

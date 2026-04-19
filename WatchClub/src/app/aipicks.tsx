@@ -53,7 +53,7 @@ function MovieCard({ item }: any) {
             style={styles.thumbnail}
           />
         ) : (
-          <View style={[styles.thumbnail, { backgroundColor: "#222" }]} />
+          <View style={[styles.thumbnail, { backgroundColor: theme.surface }]} />
         )}
 
         <View style={{ flex: 1 }}>
@@ -116,6 +116,7 @@ function MovieCard({ item }: any) {
 /* ---------------- SCREEN ---------------- */
 export default function AIPicksScreen() {
   const router = useRouter();
+  const theme = useTheme();
   const [movies, setMovies] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -136,12 +137,12 @@ export default function AIPicksScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#000" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
 
       {/* 🔙 BACK BUTTON */}
       <TouchableOpacity
         onPress={() => router.back()}
-        style={[styles.backBtn, { backgroundColor: "#222" }]}
+        style={[styles.backBtn, { backgroundColor: theme.surface }]}
       >
         <ThemedText>←</ThemedText>
       </TouchableOpacity>

@@ -22,6 +22,8 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { MaxContentWidth, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
+import { Stack } from 'expo-router';
+
 
 type ActiveSection = 'friends' | 'search' | 'requests';
 
@@ -222,14 +224,15 @@ export default function FindScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
+      
     <ScrollView
       style={[styles.scrollView, { backgroundColor: theme.background }]}
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
     >
       <ThemedView style={styles.container}>
-      <View style={styles.header}>
-          <ThemedText type="title">Find</ThemedText>
+  <View style={[styles.header, { backgroundColor: theme.background }]}>
+            <ThemedText type="title">Find</ThemedText>
           <ThemedText
             style={[styles.subtext, { color: theme.textPrimary, opacity: 0.7 }]}
           >

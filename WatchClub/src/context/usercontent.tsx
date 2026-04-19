@@ -15,6 +15,7 @@ const UserContext = createContext<UserContextType>({
   email: '',
   username: '',
   genres: [],
+  services: [],
   setUser: () => {},
   setEmail: () => {},
   setUsername: () => {},
@@ -25,6 +26,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [email, setEmailState] = useState('');
   const [username, setUsernameState] = useState('');
   const [genres, setGenres] = useState<string[]>([]);
+  const [services, setServicesState] = useState<string[]>([]);
 
   function setUser(newName: string, newGenres: string[], newEmail?: string) {
     setName(newName);
@@ -41,6 +43,10 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   function setUsername(newUsername: string) {
     setUsernameState(newUsername);
+  }
+
+  function setServices(newServices: string[]) {
+    setServicesState(newServices);
   }
 
   return (
