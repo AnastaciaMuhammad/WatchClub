@@ -14,7 +14,6 @@ import { ThemedView } from '@/components/themed-view';
 import { useTheme } from '@/hooks/use-theme';
 import { useRouter } from 'expo-router';
 import { useUser } from '../../context/usercontent';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { Ionicons } from '@expo/vector-icons';
 
 
@@ -231,8 +230,8 @@ export default function HomeScreen() {
 
               {/* STREAK */}
               <View style={[styles.streakBadge, { borderColor: theme.border }]}>
-                <FontAwesome5 name="fire" size={24} color="red" />                
-                  <View>
+                <Ionicons name="flame" size={24} color="#ef4444" />                 
+                <View>
                   <ThemedText type="smallBold" style={{ color: theme.primary }}>
                     {STREAK}
                   </ThemedText>
