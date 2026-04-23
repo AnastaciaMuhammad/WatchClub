@@ -45,6 +45,7 @@ export default function Welcome() {
 
           <Button
             label="Sign Up"
+            size="XL"
             onPress={() => router.push('/auth/signup')}
           />
         </View>
