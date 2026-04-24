@@ -82,7 +82,7 @@ export default function MovieScreen() {
           onPress={() => setIsFavorite(!isFavorite)}
           style={[styles.favBtn, { backgroundColor: theme.surface }]}
         >
-          <ThemedText>{isFavorite ? "❤️" : "🤍"}</ThemedText>
+          <ThemedText>{isFavorite ? <Ionicons name="heart" color="red" size={20}/> : <Ionicons name="heart" color="white" size={20}/>}</ThemedText>
         </TouchableOpacity>
 
         <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>

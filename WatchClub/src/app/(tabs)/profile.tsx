@@ -1,9 +1,3 @@
-//
-//  profile.tsx
-//
-//  Full profile page using signed-in user info
-//
-
 import React from 'react';
 import {
   View,
@@ -13,31 +7,23 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { useTheme } from '@/hooks/use-theme';
 import { useUser } from '@/context/usercontent';
-import { Spacing, Radius } from '@/constants/theme';
 
-const STATS = [
-  { label: 'Movies\nWatched', value: '24' },
-  { label: 'Watch\nParties', value: '8' },
-  { label: 'Friends', value: '12' },
-];
+/* ───────────────────────────── */
 
 export default function ProfileScreen() {
-  const theme = useTheme();
   const router = useRouter();
   const { name, email, username, genres } = useUser();
 
   const displayName = name || 'Guest User';
   const displayUsername =
     username || (email ? '@' + email.split('@')[0] : '@user');
-  const displayEmail = email || 'No email set';
+
   const displayGenres =
-    genres.length > 0 ? genres : ['Action', 'Sci-Fi', 'Drama'];
+    genres.length > 0 ? genres : ['Drama', 'Thriller', 'Animation'];
 
   const initials = displayName
     .split(' ')
@@ -46,301 +32,314 @@ export default function ProfileScreen() {
     .toUpperCase()
     .slice(0, 2);
 
-  const activities = [
+  const stats = [
     {
-      icon: 'glass-cheers',
-      text: 'Hosted a Watch Party for Inception',
-      time: '2 days ago',
+      label: 'Watch Streak',
+      value: 10,
+      icon: (p: any) => <Ionicons name="flame" {...p} />,
+      color: '#ef4444',
+      bg: '#7f1d1d',
     },
     {
-      icon: 'heart',
-      text: 'Favorited Interstellar',
-      time: '4 days ago',
+      label: 'Movies Watched',
+      value: 10,
+      icon: (p: any) => <Ionicons name="film-outline" {...p} />,
+      color: '#3b82f6',
+      bg: '#1e3a8a',
     },
     {
-      icon: 'user-plus',
-      text: 'Added Marcus Hill as a friend',
-      time: '1 week ago',
+      label: 'Attended Parties',
+      value: 10,
+      icon: (p: any) => <Ionicons name="calendar" {...p} />,
+      color: '#06b6d4',
+      bg: '#164e63',
     },
   ];
 
-  const actions = [
-    { label: 'Notifications', icon: 'bell', onPress: () => {} },
-    { label: 'Privacy Settings', icon: 'lock', onPress: () => {} },
-    { label: 'Appearance', icon: 'paint-brush', onPress: () => {} },
-    {
-      label: 'Sign Out',
-      icon: 'sign-out-alt',
-      danger: true,
-      onPress: () => router.replace('/auth/signin'),
-    },
+  const activities = [
+    { text: 'Watched Stellar Odyssey', time: '2 days ago', color: '#22c55e' },
+    { text: 'Joined "Movie Night Crew"', time: '4 days ago', color: '#ef4444' },
+    { text: 'Achieved 10-day streak', time: '5 days ago', color: '#3b82f6' },
+    { text: 'Rated Zootopia 2 • 5 stars', time: '6 days ago', color: '#22c55e' },
   ];
 
   return (
-    <SafeAreaView style={[styles.screen, { backgroundColor: theme.background }]}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
-        {/* ─── Header Card ─── */}
-        <ThemedView style={[styles.headerCard, { backgroundColor: theme.surface }]}>
-          <View style={[styles.avatar, { backgroundColor: theme.primary }]}>
-            <ThemedText style={[styles.avatarText, { color: theme.textInverse }]}>
-              {initials}
-            </ThemedText>
+    <SafeAreaView style={{flex: 1}}>
+      <ScrollView contentContainerStyle={styles.container}>
+        
+        {/* ─── HEADER ─── */}
+        <View style={styles.header}>
+          <View style={styles.avatarRing}>
+            <View style={styles.avatar}>
+              <ThemedText style={styles.avatarText}>
+                {initials}
+              </ThemedText>
+            </View>
           </View>
 
-          <ThemedText type="title" style={styles.nameText}>
-            {displayName}
-          </ThemedText>
+          <ThemedText style={styles.name}>{displayName}</ThemedText>
+          <ThemedText style={styles.sub}>{displayUsername}</ThemedText>
 
-          <ThemedText type="small" style={{ color: theme.muted }}>
-            {displayUsername}
-          </ThemedText>
-
-          {/* Email */}
-          <View style={[styles.emailRow, { backgroundColor: theme.background }]}>
-            <FontAwesome5 name="envelope" size={14} color={theme.muted} />
-            <ThemedText
-              type="small"
-              style={{ color: theme.textPrimary, marginLeft: 6 }}
-            >
-              {displayEmail}
-            </ThemedText>
-          </View>
-
-          <TouchableOpacity
-            style={[styles.editBtn, { borderColor: theme.primary }]}
-          >
-            <ThemedText
-              type="small"
-              style={{ color: theme.primary, fontWeight: '600' }}
-            >
-              Edit Profile
-            </ThemedText>
+          <TouchableOpacity style={styles.editBtn}>
+            <ThemedText style={styles.editText}>Edit Profile</ThemedText>
           </TouchableOpacity>
-        </ThemedView>
+        </View>
 
-        {/* ─── Stats ─── */}
-        <View style={[styles.statsRow, { backgroundColor: theme.surface }]}>
-          {STATS.map((stat, i) => (
-            <React.Fragment key={stat.label}>
-              <View style={styles.statItem}>
-                <ThemedText style={[styles.statValue, { color: theme.primary }]}>
-                  {stat.value}
-                </ThemedText>
-                <ThemedText
-                  type="small"
-                  style={{ color: theme.muted, textAlign: 'center' }}
-                >
-                  {stat.label}
-                </ThemedText>
-              </View>
-              {i < STATS.length - 1 && (
-                <View
-                  style={[styles.statDivider, { backgroundColor: theme.border }]}
-                />
-              )}
-            </React.Fragment>
+        {/* ─── STATS ─── */}
+        <View style={styles.statRow}>
+          {stats.map((s, i) => (
+            <View key={i} style={styles.statWrapper}>
+              <StatCard {...s} />
+            </View>
           ))}
         </View>
 
-        {/* ─── Favorite Genres ─── */}
-        <View style={[styles.section, { backgroundColor: theme.surface }]}>
-          <ThemedText type="smallBold" style={styles.sectionTitle}>
-            <FontAwesome5 name="film" size={14} color={theme.primary} /> Favorite Genres
-          </ThemedText>
+        {/* ─── GENRES ─── */}
+        <View style={styles.card}>
+          <ThemedText style={styles.sectionTitle}>Favorite Genres</ThemedText>
 
           <View style={styles.chipRow}>
-            {displayGenres.map((genre) => (
-              <View
-                key={genre}
-                style={[styles.chip, { backgroundColor: theme.primary }]}
-              >
-                <ThemedText type="small" style={{ color: theme.textInverse }}>
-                  {genre}
-                </ThemedText>
+            {displayGenres.map((g) => (
+              <View key={g} style={styles.chip}>
+                <ThemedText style={styles.chipText}>{g}</ThemedText>
               </View>
             ))}
           </View>
         </View>
 
-        {/* ─── Recent Activity ─── */}
-        <View style={[styles.section, { backgroundColor: theme.surface }]}>
-          <ThemedText type="smallBold" style={styles.sectionTitle}>
-            <FontAwesome5 name="clock" size={14} color={theme.primary} /> Recent Activity
-          </ThemedText>
+        {/* ─── ACHIEVEMENTS ─── */}
+        <View style={styles.card}>
+          <ThemedText style={styles.sectionTitle}>Achievements</ThemedText>
 
-          {activities.map((item, i) => (
-            <View
-              key={i}
-              style={[
-                styles.activityRow,
-                { borderBottomColor: theme.background },
-              ]}
-            >
-              <FontAwesome5
-                name={item.icon}
-                size={16}
-                color={theme.primary}
-                style={{ marginTop: 2 }}
-              />
+          <View style={styles.achievementRow}>
+            <Ionicons name="trophy" size={20} color="#facc15" />
+            <View>
+              <ThemedText style={styles.achievementTitle}>
+                5 day streak hotness
+              </ThemedText>
+              <ThemedText style={styles.achievementSub}>
+                You are on fire.
+              </ThemedText>
+            </View>
+          </View>
+        </View>
 
-              <View style={{ flex: 1 }}>
-                <ThemedText type="small">{item.text}</ThemedText>
-                <ThemedText type="small" style={{ color: theme.muted }}>
-                  {item.time}
+        {/* ─── ACTIVITY ─── */}
+        <View style={styles.card}>
+          <ThemedText style={styles.sectionTitle}>Recent Activity</ThemedText>
+
+          {activities.map((a, i) => (
+            <View key={i} style={styles.activityRow}>
+              <View style={[styles.dot, { backgroundColor: a.color }]} />
+              <View>
+                <ThemedText style={styles.activityText}>
+                  {a.text}
+                </ThemedText>
+                <ThemedText style={styles.activityTime}>
+                  {a.time}
                 </ThemedText>
               </View>
             </View>
           ))}
         </View>
 
-        {/* ─── Actions ─── */}
-        <View style={[styles.section, { backgroundColor: theme.surface }]}>
-          {actions.map((item) => (
-            <TouchableOpacity
-              key={item.label}
-              onPress={item.onPress}
-              style={[styles.menuRow, { borderBottomColor: theme.background }]}
-            >
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-                <FontAwesome5
-                  name={item.icon}
-                  size={14}
-                  color={item.danger ? '#ff4d4d' : theme.textPrimary}
-                />
+        {/* ─── SIGN OUT ─── */}
+        <TouchableOpacity
+          onPress={() => router.replace('/auth/signin')}
+          style={styles.signOut}
+        >
+          <ThemedText style={styles.signOutText}>
+            Sign Out
+          </ThemedText>
+        </TouchableOpacity>
 
-                <ThemedText
-                  type="small"
-                  style={{
-                    color: item.danger ? '#ff4d4d' : theme.textPrimary,
-                    fontWeight: '500',
-                  }}
-                >
-                  {item.label}
-                </ThemedText>
-              </View>
-
-              <ThemedText style={{ color: theme.muted }}>›</ThemedText>
-            </TouchableOpacity>
-          ))}
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-/* ─── Styles ─── */
+/* ───────────────────────────── */
+
+const StatCard = ({ icon: Icon, value, label, color, bg }: any) => (
+  <View style={[styles.statCard, { backgroundColor: bg, borderColor: color }]}>
+    <Icon size={26} color={color} />
+    <ThemedText style={[styles.statValue, { color }]}>
+      {value}
+    </ThemedText>
+    <ThemedText style={[styles.statLabel, { color }]}>
+      {label}
+    </ThemedText>
+  </View>
+);
+
+/* ───────────────────────────── */
 
 const styles = StyleSheet.create({
-  screen: { flex: 1 },
-
-  scroll: {
-    padding: Spacing.three,
-    gap: Spacing.two,
-    paddingBottom: 100,
+  container: {
+    paddingHorizontal: 16,
+    paddingTop: 10,
+    paddingBottom: 120,
   },
 
-  headerCard: {
-    borderRadius: Radius.lg,
-    padding: Spacing.four,
+  header: {
+    borderRadius: 24,
+    paddingVertical: 28,
+    paddingHorizontal: 20,
     alignItems: 'center',
-    gap: Spacing.two,
+    marginBottom: 20,
+  },
+
+  avatarRing: {
+    borderWidth: 4,
+    borderColor: '#3b82f6',
+    borderRadius: 999,
+    padding: 4,
+    marginBottom: 12,
   },
 
   avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    alignItems: 'center',
+    width: 90,
+    height: 90,
+    borderRadius: 999,
+    backgroundColor: '#1f2937',
     justifyContent: 'center',
-    marginBottom: Spacing.one,
+    alignItems: 'center',
   },
 
   avatarText: {
     fontSize: 28,
+    color: 'white',
     fontWeight: '700',
   },
 
-  nameText: {
-    textAlign: 'center',
+  name: {
+    fontSize: 22,
+    color: 'white',
+    fontWeight: '700',
   },
 
-  emailRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: Radius.pill,
-    marginTop: Spacing.one,
+  sub: {
+    color: '#9ca3af',
+    marginBottom: 8,
   },
 
   editBtn: {
-    marginTop: Spacing.two,
-    borderWidth: 1.5,
-    borderRadius: Radius.pill,
-    paddingHorizontal: 24,
-    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: '#3b82f6',
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+    borderRadius: 999,
   },
 
-  statsRow: {
+  editText: {
+    color: '#3b82f6',
+    fontWeight: '600',
+  },
+
+  statRow: {
     flexDirection: 'row',
-    borderRadius: Radius.lg,
-    padding: Spacing.three,
-    alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
   },
 
-  statItem: {
-    alignItems: 'center',
+  statWrapper: {
     flex: 1,
-    gap: 2,
+    marginHorizontal: 5,
+  },
+
+  statCard: {
+    padding: 14,
+    borderRadius: 16,
+    borderWidth: 1.5,
+    alignItems: 'center',
   },
 
   statValue: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: '700',
+    marginTop: 6,
   },
 
-  statDivider: {
-    width: 1,
-    height: 40,
+  statLabel: {
+    fontSize: 12,
+    textAlign: 'center',
   },
 
-  section: {
-    borderRadius: Radius.lg,
-    padding: Spacing.three,
-    gap: Spacing.two,
+  card: {
+    marginTop: 18,
+    borderRadius: 18,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#3b82f6',
+    backgroundColor: '#020617',
   },
 
   sectionTitle: {
-    fontSize: 15,
-    marginBottom: Spacing.one,
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 10,
   },
 
   chipRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: Spacing.two,
   },
 
   chip: {
-    borderRadius: Radius.pill,
-    paddingHorizontal: 14,
+    backgroundColor: '#1d4ed8',
+    paddingHorizontal: 12,
     paddingVertical: 6,
+    borderRadius: 999,
+    marginRight: 8,
+    marginBottom: 8,
+  },
+
+  chipText: {
+    color: 'white',
+  },
+
+  achievementRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  achievementTitle: {
+    color: 'white',
+    fontWeight: '600',
+  },
+
+  achievementSub: {
+    color: '#9ca3af',
   },
 
   activityRow: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: Spacing.two,
-    paddingBottom: Spacing.two,
-    borderBottomWidth: 1,
+    marginBottom: 14,
   },
 
-  menuRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  activityText: {
+    color: 'white',
+  },
+
+  activityTime: {
+    color: '#9ca3af',
+  },
+
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginTop: 6,
+    marginRight: 10,
+  },
+
+  signOut: {
+    marginTop: 20,
     alignItems: 'center',
-    paddingVertical: Spacing.two,
-    borderBottomWidth: 1,
+  },
+
+  signOutText: {
+    color: '#ef4444',
+    fontWeight: '600',
   },
 });
