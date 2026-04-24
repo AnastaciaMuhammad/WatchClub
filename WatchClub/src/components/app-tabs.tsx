@@ -23,7 +23,7 @@ export default function AppTabs() {
       <NativeTabs.Trigger name="find">
         <NativeTabs.Trigger.Label>Find</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
-          src={require('@/assets/images/tabIcons/explore.png')}
+          src={require('@/assets/images/tabIcons/people.png')}
           renderingMode="template"
         />
       </NativeTabs.Trigger>
@@ -31,15 +31,15 @@ export default function AppTabs() {
       <NativeTabs.Trigger name="create">
         <NativeTabs.Trigger.Label>Create</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
-          src={require('@/assets/images/tabIcons/home.png')}
+          src={require('@/assets/images/tabIcons/create.png')}
           renderingMode="template"
         />
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="parties">
-        <NativeTabs.Trigger.Label>Parties</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Label>Clubs</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
-          src={require('@/assets/images/tabIcons/home.png')}
+          src={require('@/assets/images/tabIcons/film-outline.png')}
           renderingMode="template"
         />
       </NativeTabs.Trigger>
@@ -47,7 +47,7 @@ export default function AppTabs() {
       <NativeTabs.Trigger name="profile">
         <NativeTabs.Trigger.Label>Profile</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
-          src={require('@/assets/images/tabIcons/home.png')}
+          src={require('@/assets/images/tabIcons/person-circle.png')}
           renderingMode="template"
         />
       </NativeTabs.Trigger>

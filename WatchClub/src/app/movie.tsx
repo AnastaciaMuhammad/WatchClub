@@ -15,6 +15,7 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { useTheme } from "@/hooks/use-theme";
 import { Ionicons } from '@expo/vector-icons';
+import { useUser } from "@/context/usercontent";
 
 
 const API_KEY = "63b1af1c793166c15a7ecda62a6c61ac";
@@ -23,13 +24,16 @@ export default function MovieScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const theme = useTheme();
+  const { addFavorite, removeFavorite, isFavorite } = useUser();
 
   const movieId = Array.isArray(id) ? id[0] : id;
 
   const [movie, setMovie] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [trailerKey, setTrailerKey] = useState<string | null>(null);
-  const [isFavorite, setIsFavorite] = useState(false);
+
+  // Derive favorite state from context so it stays in sync with home/profile
+  const favorite = movie ? isFavorite(movie.id) : false;
 
   useEffect(() => {
     if (!movieId) return;
@@ -55,6 +59,21 @@ export default function MovieScreen() {
       .catch(() => setTrailerKey(null));
   }, [movieId]);
 
+  const handleToggleFavorite = () => {
+    if (!movie) return;
+    if (favorite) {
+      removeFavorite(movie.id);
+    } else {
+      addFavorite({
+        id: movie.id,
+        title: movie.title,
+        poster_path: movie.poster_path ?? null,
+        release_date: movie.release_date ?? '',
+        vote_average: movie.vote_average ?? 0,
+      });
+    }
+  };
+
   if (loading || !movie) {
     return (
       <SafeAreaView
@@ -69,7 +88,7 @@ export default function MovieScreen() {
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
       <ThemedView style={styles.container}>
 
-        {/* ← Back Button — fixed top-left, same as aipicks */}
+        {/* ← Back Button */}
         <TouchableOpacity
           onPress={() => router.back()}
           style={[styles.backBtn, { backgroundColor: theme.surface }]}
@@ -77,12 +96,16 @@ export default function MovieScreen() {
           <ThemedText>←</ThemedText>
         </TouchableOpacity>
 
-        {/*Favorite Button — fixed top-right */}
+        {/* Favorite Button — now synced with context */}
         <TouchableOpacity
-          onPress={() => setIsFavorite(!isFavorite)}
+          onPress={handleToggleFavorite}
           style={[styles.favBtn, { backgroundColor: theme.surface }]}
         >
-          <ThemedText>{isFavorite ? <Ionicons name="heart" color="red" size={20}/> : <Ionicons name="heart" color="white" size={20}/>}</ThemedText>
+          <Ionicons
+            name="heart"
+            color={favorite ? "red" : "white"}
+            size={20}
+          />
         </TouchableOpacity>
 
         <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
@@ -98,8 +121,8 @@ export default function MovieScreen() {
             <ThemedText type="title">{movie.title}</ThemedText>
 
             <ThemedText type="small" themeColor="disabled">
-              <Ionicons name="star" size={15} color="#ffffff" />            
-                {movie.vote_average} / 10
+              <Ionicons name="star" size={15} color="#ffffff" />
+              {movie.vote_average} / 10
             </ThemedText>
 
             <ThemedText style={styles.overview}>
@@ -165,7 +188,6 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
 
-  // Positioned absolutely at top — same layout as aipicks.tsx
   backBtn: {
     position: "absolute",
     top: 10,
